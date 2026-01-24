@@ -10,3 +10,16 @@
 - Test credentials: admin@company.com / password or manager@company.com / password
 - All protected routes now require authentication
 - Types check successfully, tests pass
+
+
+[2026-01-24] Seller Registry Feature Complete
+- Added Seller model to Prisma schema (businessName, contactName, email, phone, address)
+- Migrated database to SQLite with Prisma 7 and LibSQL adapter
+- Created /api/sellers routes for GET (list) and POST (create)
+- Created /api/sellers/[id] route for GET (individual seller)
+- Built /sellers page with seller list table and add seller form
+- Built /sellers/[id] page for seller profile view
+- Added "Manage Sellers" link to home page
+- Configured Prisma client with @prisma/adapter-libsql
+- Types check successfully, tests pass
+- Users can now navigate to sellers, add new sellers with business details, view seller list, and open individual seller profiles

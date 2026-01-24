@@ -29,7 +29,7 @@
         "Verify seller appears in seller list",
         "Open seller profile to validate stored data"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "document-collection",
