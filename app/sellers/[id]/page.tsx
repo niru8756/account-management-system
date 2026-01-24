@@ -13,15 +13,28 @@ type Seller = {
   createdAt: string;
 };
 
+type Document = {
+  id: string;
+  fileName: string;
+  fileUrl: string;
+  tags: string;
+  createdAt: string;
+};
+
 export default function SellerProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const [seller, setSeller] = useState<Seller | null>(null);
+  const [documents, setDocuments] = useState<Document[]>([]);
   const [id, setId] = useState<string>("");
+  const [fileName, setFileName] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
+  const [tags, setTags] = useState("");
   const router = useRouter();
 
   useEffect(() => {
     params.then((p) => {
       setId(p.id);
       fetchSeller(p.id);
+      fetchDocuments(p.id);
     });
   }, [params]);
 
@@ -33,6 +46,29 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
     }
   };
 
+  const fetchDocuments = async (sellerId: string) => {
+    const res = await fetch(`/api/sellers/${sellerId}/documents`);
+    if (res.ok) {
+      const data = await res.json();
+      setDocuments(data);
+    }
+  };
+
+  const handleUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const res = await fetch(`/api/sellers/${id}/documents`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fileName, fileUrl, tags }),
+    });
+    if (res.ok) {
+      setFileName("");
+      setFileUrl("");
+      setTags("");
+      fetchDocuments(id);
+    }
+  };
+
   if (!seller) return <div className="p-8">Loading...</div>;
 
   return (
@@ -41,7 +77,7 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
         <button onClick={() => router.push("/sellers")} className="mb-4 text-blue-600 hover:text-blue-800">
           ← Back to Sellers
         </button>
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-lg shadow p-6 mb-6">
           <h1 className="text-3xl font-bold mb-6">{seller.businessName}</h1>
           <div className="space-y-4">
             <div>
@@ -64,6 +100,66 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
               <label className="text-sm font-medium text-gray-500">Created</label>
               <p className="text-lg">{new Date(seller.createdAt).toLocaleString()}</p>
             </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-2xl font-bold mb-4">Documents</h2>
+          <form onSubmit={handleUpload} className="mb-6 space-y-4">
+            <div>
+              <input
+                type="text"
+                placeholder="File Name"
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="File URL"
+                value={fileUrl}
+                onChange={(e) => setFileUrl(e.target.value)}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="Tags (e.g., KYC, PAN, Compliance)"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              Upload Document
+            </button>
+          </form>
+
+          <div className="space-y-2">
+            {documents.length === 0 ? (
+              <p className="text-gray-500">No documents uploaded yet</p>
+            ) : (
+              documents.map((doc) => (
+                <div key={doc.id} className="border p-4 rounded">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-medium">{doc.fileName}</p>
+                      <p className="text-sm text-gray-600">Tags: {doc.tags}</p>
+                      <p className="text-xs text-gray-400">{new Date(doc.createdAt).toLocaleString()}</p>
+                    </div>
+                    <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                      View
+                    </a>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

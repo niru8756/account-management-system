@@ -23,12 +23,24 @@ model User {
 }
 
 model Seller {
-  id           String   @id @default(cuid())
+  id           String     @id @default(cuid())
   businessName String
   contactName  String?
   email        String?
   phone        String?
   address      String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  documents    Document[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  sellerId  String
+  seller    Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  fileName  String
+  fileUrl   String
+  tags      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -23,3 +23,14 @@
 - Configured Prisma client with @prisma/adapter-libsql
 - Types check successfully, tests pass
 - Users can now navigate to sellers, add new sellers with business details, view seller list, and open individual seller profiles
+
+
+[2026-01-24] Document Collection Feature Complete
+- Added Document model to Prisma schema with relation to Seller (fileName, fileUrl, tags)
+- Created /api/sellers/[id]/documents routes for GET (list) and POST (upload)
+- Added Documents section to seller profile page with upload form
+- Documents display with file name, tags, creation date, and view link
+- Form includes fields for file name, file URL, and tags (KYC, PAN, Compliance)
+- Documents are linked to seller via sellerId foreign key with cascade delete
+- Types check successfully, tests pass
+- Internal users can now upload documents, assign tags, and view all documents for a seller

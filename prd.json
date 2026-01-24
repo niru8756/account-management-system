@@ -41,7 +41,7 @@
         "Assign document tags",
         "Verify document is stored and visible to internal users"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "one-time-upload-link",
