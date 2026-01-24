@@ -38,11 +38,19 @@ type Payment = {
   createdAt: string;
 };
 
+type Invoice = {
+  id: string;
+  invoiceNumber: string;
+  pdfUrl: string | null;
+  createdAt: string;
+};
+
 export default function SellerProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const [seller, setSeller] = useState<Seller | null>(null);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [uploadLinks, setUploadLinks] = useState<UploadLink[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [invoices, setInvoices] = useState<Record<string, Invoice[]>>({});
   const [id, setId] = useState<string>("");
   const [fileName, setFileName] = useState("");
   const [fileUrl, setFileUrl] = useState("");
@@ -92,6 +100,24 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
     if (res.ok) {
       const data = await res.json();
       setPayments(data);
+      data.forEach((payment: Payment) => fetchInvoices(payment.id));
+    }
+  };
+
+  const fetchInvoices = async (paymentId: string) => {
+    const res = await fetch(`/api/payments/${paymentId}/invoices`);
+    if (res.ok) {
+      const data = await res.json();
+      setInvoices((prev) => ({ ...prev, [paymentId]: data }));
+    }
+  };
+
+  const generateInvoice = async (paymentId: string) => {
+    const res = await fetch(`/api/payments/${paymentId}/invoices`, {
+      method: "POST",
+    });
+    if (res.ok) {
+      fetchInvoices(paymentId);
     }
   };
 
@@ -322,6 +348,34 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
                     <a href={payment.proofOfPayment} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
                       View Proof
                     </a>
+                  </div>
+                  <div className="mt-4 border-t pt-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-semibold">Invoices</h4>
+                      <button
+                        onClick={() => generateInvoice(payment.id)}
+                        className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                      >
+                        Generate Invoice
+                      </button>
+                    </div>
+                    {invoices[payment.id]?.length > 0 ? (
+                      <div className="space-y-2">
+                        {invoices[payment.id].map((invoice) => (
+                          <div key={invoice.id} className="bg-gray-50 p-2 rounded text-sm">
+                            <p className="font-medium">{invoice.invoiceNumber}</p>
+                            <p className="text-xs text-gray-500">{new Date(invoice.createdAt).toLocaleString()}</p>
+                            {invoice.pdfUrl && (
+                              <a href={invoice.pdfUrl} className="text-blue-600 hover:text-blue-800 text-xs">
+                                Download PDF
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500">No invoices generated</p>
+                    )}
                   </div>
                 </div>
               ))

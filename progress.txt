@@ -58,3 +58,15 @@
 - Payments are linked to seller via sellerId foreign key with cascade delete
 - Types check successfully, tests pass
 - Internal users can now record payments with metadata, upload proof of payment, and view all payments for a seller
+
+
+[2026-01-24] Invoice Generation Feature Complete
+- Added Invoice model to Prisma schema with relation to Payment (invoiceNumber, pdfUrl)
+- Created /api/payments/[id]/invoices routes for POST (generate) and GET (list)
+- Added invoice generation UI to seller profile payment records
+- Each payment can have multiple invoices with unique invoice numbers
+- Invoice numbers auto-generated with format INV-{timestamp}
+- Invoices display with number, creation date, and PDF download link
+- Regenerated Prisma client to include Invoice model
+- Types check successfully, tests pass
+- Internal users can now generate invoices from payment records, view invoice numbers, and download invoice PDFs

@@ -78,7 +78,7 @@
         "Download invoice PDF",
         "Confirm invoice is stored in seller profile"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "internal-communication",
