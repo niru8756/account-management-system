@@ -34,3 +34,16 @@
 - Documents are linked to seller via sellerId foreign key with cascade delete
 - Types check successfully, tests pass
 - Internal users can now upload documents, assign tags, and view all documents for a seller
+
+
+[2026-01-24] One-Time Upload Link Feature Complete
+- Added UploadLink model to Prisma schema (token, used, expiresAt, sellerId)
+- Created /api/sellers/[id]/upload-links routes for POST (generate) and GET (list)
+- Created /api/upload route for public document upload via token
+- Built /upload page for external users to upload documents using token
+- Added upload link generation UI to seller profile page
+- Links expire after use or after 7 days
+- Updated middleware to allow public access to /upload and /api/upload
+- Upload links display status (Active/Used/Expired) and expiration time
+- Types check successfully, tests pass
+- External sellers can now receive a one-time link, upload documents securely, and links automatically expire after single use

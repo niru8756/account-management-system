@@ -21,9 +21,18 @@ type Document = {
   createdAt: string;
 };
 
+type UploadLink = {
+  id: string;
+  token: string;
+  used: boolean;
+  expiresAt: string;
+  createdAt: string;
+};
+
 export default function SellerProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const [seller, setSeller] = useState<Seller | null>(null);
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [uploadLinks, setUploadLinks] = useState<UploadLink[]>([]);
   const [id, setId] = useState<string>("");
   const [fileName, setFileName] = useState("");
   const [fileUrl, setFileUrl] = useState("");
@@ -35,6 +44,7 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
       setId(p.id);
       fetchSeller(p.id);
       fetchDocuments(p.id);
+      fetchUploadLinks(p.id);
     });
   }, [params]);
 
@@ -51,6 +61,23 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
     if (res.ok) {
       const data = await res.json();
       setDocuments(data);
+    }
+  };
+
+  const fetchUploadLinks = async (sellerId: string) => {
+    const res = await fetch(`/api/sellers/${sellerId}/upload-links`);
+    if (res.ok) {
+      const data = await res.json();
+      setUploadLinks(data);
+    }
+  };
+
+  const generateUploadLink = async () => {
+    const res = await fetch(`/api/sellers/${id}/upload-links`, {
+      method: "POST",
+    });
+    if (res.ok) {
+      fetchUploadLinks(id);
     }
   };
 
@@ -140,6 +167,30 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
               Upload Document
             </button>
           </form>
+
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold mb-2">One-Time Upload Links</h3>
+            <button onClick={generateUploadLink} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4">
+              Generate Upload Link
+            </button>
+            <div className="space-y-2">
+              {uploadLinks.length === 0 ? (
+                <p className="text-gray-500">No upload links generated yet</p>
+              ) : (
+                uploadLinks.map((link) => (
+                  <div key={link.id} className="border p-3 rounded text-sm">
+                    <p className="font-mono break-all">
+                      {typeof window !== "undefined" ? `${window.location.origin}/upload?token=${link.token}` : ""}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">
+                      Status: {link.used ? "Used" : new Date(link.expiresAt) < new Date() ? "Expired" : "Active"} | 
+                      Expires: {new Date(link.expiresAt).toLocaleString()}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
 
           <div className="space-y-2">
             {documents.length === 0 ? (

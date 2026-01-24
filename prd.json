@@ -54,7 +54,7 @@
         "Verify link expires after use",
         "Confirm document appears under correct seller record"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "category": "payments",

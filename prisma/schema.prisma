@@ -23,15 +23,16 @@ model User {
 }
 
 model Seller {
-  id           String     @id @default(cuid())
+  id           String       @id @default(cuid())
   businessName String
   contactName  String?
   email        String?
   phone        String?
   address      String?
   documents    Document[]
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  uploadLinks  UploadLink[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 model Document {
@@ -43,4 +44,14 @@ model Document {
   tags      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UploadLink {
+  id        String   @id @default(cuid())
+  sellerId  String
+  seller    Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
 }
