@@ -1,113 +1,65 @@
 {
-  "title": "Internal Seller Management System",
-  "description": "An internal operations tool for the Account Management team to manage seller onboarding, documents, payments, proposals, and lifecycle tracking. This system is used only by internal users and integrates with Google Drive for document storage. The UI is built using shadcn/ui for a clean, consistent, and visually appealing internal experience.",
-  "stack": ["Next.js", "shadcn/ui", "PostgreSQL"],
-  "access_model": {
-    "type": "internal",
-    "roles": ["Admin", "Account Manager"]
-  },
-  "assumptions": [
-    "All users are internal employees",
-    "Seller documents are stored in Google Drive",
-    "Document links are manually pasted after upload to Google Drive",
-    "No external seller authentication exists",
-    "shadcn/ui is used as the primary UI component library",
-    "PostgreSQL is the only supported relational database"
-  ],
-  "technical_constraints": {
-    "database": {
-      "type": "PostgreSQL",
-      "supported_versions": ">= 13",
-      "explicitly_excluded": ["SQLite", "MySQL", "MariaDB"],
-      "notes": [
-        "Database schema should be designed for structured relational data",
-        "JSON/JSONB fields may be used where flexibility is required",
-        "Migrations must be PostgreSQL-compatible"
-      ]
-    }
-  },
-  "design_principles": [
-    "Clean and minimal internal UI",
-    "Consistency across all forms and lists",
-    "Readable, scannable layouts optimized for daily operational use",
-    "Prefer shadcn/ui components over custom-built UI",
-    "Data integrity and auditability over quick prototyping shortcuts"
-  ],
-  "modules": [
+  "title": "Seller Management System – Document & Seller Detail Enhancements",
+  "description": "This PRD defines incremental changes to the existing internal Seller Management System. It covers only newly requested behavior and modifications and assumes all previously defined and implemented functionality remains unchanged.",
+  "scope": "change-only",
+  "ui_standard": "shadcn/ui",
+  "changes": [
     {
-      "name": "Seller Registry",
-      "description": "Create and manage seller profiles with structured internal metadata.",
-      "features": [
-        "Create seller",
-        "Edit seller",
-        "View seller profile",
-        "Assign optional Account Manager",
-        "Capture service note for offered services"
-      ]
-    },
-    {
-      "name": "Document Management",
-      "description": "Track seller documents stored in Google Drive using metadata and links.",
-      "features": [
-        "Add document entry with file name, tag, and Google Drive link",
-        "Display document list in a structured and readable format",
-        "Open document via clickable Google Drive link",
-        "Edit or remove document metadata"
+      "area": "Document Management",
+      "status": "COMPLETE",
+      "problem": "Documents are now stored in Google Drive, but the UI and data model do not clearly represent this.",
+      "requirements": [
+        "Documents must be represented only as Google Drive references.",
+        "Each document record must store and display the following fields: file name, tag, and Google Drive link.",
+        "Document links must be clickable and open in a new browser tab.",
+        "The document list must be displayed in a clear, structured layout suitable for frequent internal use."
       ],
-      "explicitly_excluded": ["One-time upload links", "Direct file uploads"]
-    },
-    {
-      "name": "Payments & Invoices",
-      "description": "Track seller payments and generate invoices.",
-      "features": [
-        "Record proof-of-payment reference",
-        "Generate invoice",
-        "Link invoice to seller record"
+      "explicit_removals": [
+        "One-time upload link functionality - REMOVED",
+        "Any UI or logic related to external file uploads - REMOVED"
+      ],
+      "ui_expectations": [
+        "Use shadcn/ui Table or List components to render document lists",
+        "Tags should be visually represented using shadcn/ui Badge components"
       ]
     },
     {
-      "name": "Internal Notes & Context",
-      "description": "Maintain internal operational context for each seller.",
-      "features": [
-        "Add internal notes",
-        "Restrict visibility to internal users"
+      "area": "Seller Creation & Editing",
+      "problem": "Seller records do not currently capture ownership and service context clearly.",
+      "requirements": [
+        "While creating or editing a seller, allow optional Account Manager information to be captured.",
+        "Account Manager details must include name, mobile number, and email address.",
+        "Account Manager information must not be mandatory and must not block seller creation."
+      ],
+      "ui_expectations": [
+        "Account Manager fields should be grouped logically using shadcn/ui Form components",
+        "Optional fields should be clearly marked as optional"
       ]
     },
     {
-      "name": "Lifecycle Tracking",
-      "description": "Track seller progress across marketplaces.",
-      "features": [
-        "Marketplace-specific lifecycle stages",
-        "Lifecycle history with timestamps"
+      "area": "Service Context",
+      "problem": "There is no single place to capture what services are being offered to a seller.",
+      "requirements": [
+        "Add a single free-text note field on the seller profile for capturing service name(s).",
+        "The field should accept plain text and be editable after seller creation."
+      ],
+      "ui_expectations": [
+        "Use a shadcn/ui Textarea component",
+        "Field should be placed prominently within the seller profile"
       ]
     }
   ],
-  "data_requirements": {
-    "seller": {
-      "required_fields": ["seller_name", "business_name"],
-      "optional_fields": ["account_manager", "service_note"]
-    },
-    "account_manager": {
-      "fields": ["name", "mobile", "email"],
-      "optional": true
-    },
-    "document": {
-      "fields": ["file_name", "tag", "google_drive_link"]
-    }
-  },
-  "ui_expectations": [
-    "Use shadcn/ui components for all forms, tables, dialogs, and layouts",
-    "Document list should be presented using a table or list pattern with clear spacing",
-    "Document links must open Google Drive in a new browser tab",
-    "Forms should use consistent validation and error messaging",
-    "Optional fields must not block seller creation",
-    "UI should prioritize clarity and speed for internal users"
+  "non_goals": [
+    "Reworking existing seller flows",
+    "Introducing external user access",
+    "Adding new storage providers",
+    "Refactoring unrelated UI or backend logic"
   ],
-  "out_of_scope": [
-    "Seller login or external access",
-    "File storage outside Google Drive",
-    "One-time upload links",
-    "SQLite or MySQL database usage",
-    "Public-facing UI"
+  "success_criteria": [
+    "Users can view a clean, readable list of Google Drive documents with name, tag, and link",
+    "One-time upload links are fully removed from the system",
+    "Account Manager details can be optionally added to sellers",
+    "Service names can be captured in a dedicated seller note field",
+    "UI changes consistently use shadcn/ui components and appear visually polished"
   ]
 }

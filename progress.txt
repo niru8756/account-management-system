@@ -157,3 +157,18 @@
 - Types check successfully, tests pass
 - Database now complies with PRD requirement: PostgreSQL >= 13 only (SQLite explicitly excluded)
 - Note: PostgreSQL server must be running at localhost:5451 for migrations to apply
+
+
+[2026-01-27] One-Time Upload Link Removal Complete
+- Removed UploadLink model from Prisma schema
+- Removed uploadLinks relation from Seller model
+- Deleted /api/upload route (public document upload endpoint)
+- Deleted /upload page (external user upload interface)
+- Deleted /api/sellers/[id]/upload-links routes (generate and list endpoints)
+- Updated middleware to remove /upload and /api/upload from public access matcher
+- Removed upload link UI section from seller profile page
+- Removed UploadLink type, state, and all related functions (fetchUploadLinks, generateUploadLink)
+- Regenerated Prisma client with updated schema
+- Types check successfully, tests pass
+- System now exclusively uses internal document upload, no external upload links exist
+- Note: Database migration pending - requires PostgreSQL server running at localhost:5451
