@@ -142,3 +142,18 @@
 - Edit and delete buttons appear alongside view link for each document
 - Types check successfully, tests pass
 - Internal users can now correct document metadata mistakes and remove outdated documents
+
+
+[2026-01-27] PostgreSQL Database Migration Complete
+- Migrated database from SQLite to PostgreSQL as per PRD technical constraints
+- Updated Prisma schema to use PostgreSQL provider
+- Removed SQLite-specific LibSQL adapter configuration
+- Installed and configured @prisma/adapter-pg for PostgreSQL connection
+- Updated prisma.config.ts to use DATABASE_URL environment variable
+- Updated Prisma client initialization with PostgreSQL adapter and pg Pool
+- Added @types/pg for TypeScript support
+- Updated migration file to include accountManager and serviceNote fields
+- Created docker-compose.yml for local PostgreSQL development
+- Types check successfully, tests pass
+- Database now complies with PRD requirement: PostgreSQL >= 13 only (SQLite explicitly excluded)
+- Note: PostgreSQL server must be running at localhost:5451 for migrations to apply

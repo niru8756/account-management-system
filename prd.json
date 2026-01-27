@@ -1,7 +1,7 @@
 {
   "title": "Internal Seller Management System",
   "description": "An internal operations tool for the Account Management team to manage seller onboarding, documents, payments, proposals, and lifecycle tracking. This system is used only by internal users and integrates with Google Drive for document storage. The UI is built using shadcn/ui for a clean, consistent, and visually appealing internal experience.",
-  "stack": ["Next.js", "shadcn/ui"],
+  "stack": ["Next.js", "shadcn/ui", "PostgreSQL"],
   "access_model": {
     "type": "internal",
     "roles": ["Admin", "Account Manager"]
@@ -11,13 +11,27 @@
     "Seller documents are stored in Google Drive",
     "Document links are manually pasted after upload to Google Drive",
     "No external seller authentication exists",
-    "shadcn/ui is used as the primary UI component library"
+    "shadcn/ui is used as the primary UI component library",
+    "PostgreSQL is the only supported relational database"
   ],
+  "technical_constraints": {
+    "database": {
+      "type": "PostgreSQL",
+      "supported_versions": ">= 13",
+      "explicitly_excluded": ["SQLite", "MySQL", "MariaDB"],
+      "notes": [
+        "Database schema should be designed for structured relational data",
+        "JSON/JSONB fields may be used where flexibility is required",
+        "Migrations must be PostgreSQL-compatible"
+      ]
+    }
+  },
   "design_principles": [
     "Clean and minimal internal UI",
     "Consistency across all forms and lists",
     "Readable, scannable layouts optimized for daily operational use",
-    "Prefer shadcn/ui components over custom-built UI"
+    "Prefer shadcn/ui components over custom-built UI",
+    "Data integrity and auditability over quick prototyping shortcuts"
   ],
   "modules": [
     {
@@ -25,10 +39,10 @@
       "description": "Create and manage seller profiles with structured internal metadata.",
       "features": [
         "Create seller",
-        "Edit seller - COMPLETE",
+        "Edit seller",
         "View seller profile",
-        "Assign optional Account Manager - COMPLETE",
-        "Capture service note for offered services - COMPLETE"
+        "Assign optional Account Manager",
+        "Capture service note for offered services"
       ]
     },
     {
@@ -38,7 +52,7 @@
         "Add document entry with file name, tag, and Google Drive link",
         "Display document list in a structured and readable format",
         "Open document via clickable Google Drive link",
-        "Edit or remove document metadata - COMPLETE"
+        "Edit or remove document metadata"
       ],
       "explicitly_excluded": ["One-time upload links", "Direct file uploads"]
     },
@@ -56,7 +70,6 @@
       "description": "Maintain internal operational context for each seller.",
       "features": [
         "Add internal notes",
-        "Attach optional documents",
         "Restrict visibility to internal users"
       ]
     },
@@ -83,7 +96,7 @@
     }
   },
   "ui_expectations": [
-    "Use shadcn/ui components for all forms, tables, modals, and layouts",
+    "Use shadcn/ui components for all forms, tables, dialogs, and layouts",
     "Document list should be presented using a table or list pattern with clear spacing",
     "Document links must open Google Drive in a new browser tab",
     "Forms should use consistent validation and error messaging",
@@ -94,6 +107,7 @@
     "Seller login or external access",
     "File storage outside Google Drive",
     "One-time upload links",
+    "SQLite or MySQL database usage",
     "Public-facing UI"
   ]
 }

@@ -18,6 +18,8 @@ CREATE TABLE "Seller" (
     "email" TEXT,
     "phone" TEXT,
     "address" TEXT,
+    "accountManager" TEXT,
+    "serviceNote" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
