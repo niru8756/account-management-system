@@ -23,20 +23,22 @@ model User {
 }
 
 model Seller {
-  id               String            @id @default(cuid())
+  id               String             @id @default(cuid())
   businessName     String
   contactName      String?
   email            String?
   phone            String?
   address          String?
+  accountManager   String?
+  serviceNote      String?
   documents        Document[]
   uploadLinks      UploadLink[]
   payments         Payment[]
   internalNotes    InternalNote[]
   proposals        Proposal[]
   lifecycleHistory LifecycleHistory[]
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
 
 model Document {
@@ -61,16 +63,16 @@ model UploadLink {
 }
 
 model Payment {
-  id              String    @id @default(cuid())
-  sellerId        String
-  seller          Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  amount          Float
-  paymentDate     DateTime
-  reference       String?
-  proofOfPayment  String
-  invoices        Invoice[]
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  sellerId       String
+  seller         Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  amount         Float
+  paymentDate    DateTime
+  reference      String?
+  proofOfPayment String
+  invoices       Invoice[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model Invoice {
@@ -84,34 +86,34 @@ model Invoice {
 }
 
 model InternalNote {
-  id           String   @id @default(cuid())
-  sellerId     String
-  seller       Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  content      String
+  id            String   @id @default(cuid())
+  sellerId      String
+  seller        Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  content       String
   attachmentUrl String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Proposal {
-  id         String   @id @default(cuid())
-  sellerId   String
-  seller     Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
-  fileName   String
-  fileUrl    String
-  shareable  Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(cuid())
+  sellerId  String
+  seller    Seller   @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  fileName  String
+  fileUrl   String
+  shareable Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String
-  action    String
+  id         String   @id @default(cuid())
+  userId     String
+  action     String
   entityType String
-  entityId  String?
-  details   String?
-  createdAt DateTime @default(now())
+  entityId   String?
+  details    String?
+  createdAt  DateTime @default(now())
 }
 
 model LifecycleHistory {

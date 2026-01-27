@@ -10,6 +10,8 @@ type Seller = {
   email: string | null;
   phone: string | null;
   address: string | null;
+  accountManager: string | null;
+  serviceNote: string | null;
   createdAt: string;
 };
 
@@ -22,6 +24,8 @@ export default function SellersPage() {
     email: "",
     phone: "",
     address: "",
+    accountManager: "",
+    serviceNote: "",
   });
   const router = useRouter();
 
@@ -46,7 +50,7 @@ export default function SellersPage() {
     });
     if (res.ok) {
       setShowForm(false);
-      setFormData({ businessName: "", contactName: "", email: "", phone: "", address: "" });
+      setFormData({ businessName: "", contactName: "", email: "", phone: "", address: "", accountManager: "", serviceNote: "" });
       fetchSellers();
     }
   };
@@ -110,6 +114,24 @@ export default function SellersPage() {
                 <textarea
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                  rows={3}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Account Manager</label>
+                <input
+                  type="text"
+                  value={formData.accountManager}
+                  onChange={(e) => setFormData({ ...formData, accountManager: e.target.value })}
+                  className="w-full px-3 py-2 border rounded"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Service Note</label>
+                <textarea
+                  value={formData.serviceNote}
+                  onChange={(e) => setFormData({ ...formData, serviceNote: e.target.value })}
                   className="w-full px-3 py-2 border rounded"
                   rows={3}
                 />

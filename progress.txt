@@ -120,3 +120,15 @@
 - History ordered by creation date (most recent first)
 - Types check successfully, tests pass
 - Internal users can now track seller lifecycle per marketplace, update stages, and view complete history with timestamps
+
+
+[2026-01-27] Edit Seller Feature Complete
+- Added accountManager and serviceNote fields to Seller model in Prisma schema
+- Updated database schema from PostgreSQL to SQLite (file:./dev.db)
+- Created PUT endpoint at /api/sellers/[id] for updating seller information
+- Added edit mode toggle to seller profile page with inline form
+- Edit form includes all seller fields: businessName, contactName, email, phone, address, accountManager, serviceNote
+- Updated seller creation form to include accountManager and serviceNote fields
+- Edit button toggles between view and edit modes on seller profile
+- Types check successfully, tests pass
+- Internal users can now edit all seller information including assigning account managers and capturing service notes

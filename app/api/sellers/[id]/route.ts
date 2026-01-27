@@ -19,3 +19,21 @@ export async function GET(
   }
   return NextResponse.json(seller);
 }
+
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const body = await request.json();
+  const seller = await prisma.seller.update({
+    where: { id },
+    data: body,
+  });
+  return NextResponse.json(seller);
+}
