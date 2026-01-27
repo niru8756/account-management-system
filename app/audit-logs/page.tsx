@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AppLayout } from "@/components/app-layout";
 
 interface AuditLog {
   id: string;
@@ -37,34 +40,44 @@ export default function AuditLogsPage() {
   if (!session) return null;
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Audit Logs</h1>
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Timestamp</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entity</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Details</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {logs.map((log) => (
-              <tr key={log.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {new Date(log.createdAt).toLocaleString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.userId}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.action}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{log.entityType}</td>
-                <td className="px-6 py-4 text-sm text-gray-900">{log.details}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <AppLayout>
+      <div className="space-y-6">
+        <h1 className="text-3xl font-semibold">Audit Logs</h1>
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Timestamp</TableHead>
+                <TableHead>User</TableHead>
+                <TableHead>Action</TableHead>
+                <TableHead>Entity</TableHead>
+                <TableHead>Details</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {logs.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                    No audit logs yet.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                logs.map((log) => (
+                  <TableRow key={log.id}>
+                    <TableCell className="text-sm">
+                      {new Date(log.createdAt).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-sm">{log.userId}</TableCell>
+                    <TableCell className="text-sm">{log.action}</TableCell>
+                    <TableCell className="text-sm">{log.entityType}</TableCell>
+                    <TableCell className="text-sm">{log.details}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Card>
       </div>
-    </div>
+    </AppLayout>
   );
 }

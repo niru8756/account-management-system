@@ -220,3 +220,21 @@
 - Empty states now use centered text with muted-foreground color
 - Types check successfully, tests pass
 - Seller profile page now has clean, modern UI with proper Card-based sections and consistent shadcn/ui styling
+
+
+[2026-01-27] Global Layout and Forms UI Revamp Complete
+- Created AppLayout component with consistent header and navigation
+- Added header with "Seller Management" branding and navigation links
+- Navigation highlights active page with secondary variant button
+- Applied AppLayout to all main pages: home, sellers list, seller profile, audit logs
+- Refactored home page to use Card components for navigation sections
+- Updated sellers list page to use shadcn/ui Input, Label, Textarea components in add seller form
+- Wrapped add seller form in Card component with CardHeader and CardTitle
+- Updated audit logs page to use shadcn/ui Table component
+- Added empty states to audit logs table with centered muted text
+- All pages now have consistent max-w-7xl container with px-6 py-8 spacing
+- Removed redundant page-level background colors (now handled by AppLayout)
+- All forms now use shadcn/ui components with consistent spacing (space-y-2 for fields, space-y-6 for sections)
+- Optional fields clearly marked with muted-foreground text
+- Types check successfully, tests pass
+- All pages now have consistent layout, navigation, and styling with shadcn/ui components throughout

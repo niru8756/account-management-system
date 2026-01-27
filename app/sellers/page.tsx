@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AppLayout } from "@/components/app-layout";
 
 type Seller = {
   id: string;
@@ -62,112 +67,110 @@ export default function SellersPage() {
   };
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <AppLayout>
+      <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Sellers</h1>
+          <h1 className="text-3xl font-semibold">Sellers</h1>
           <Button onClick={() => setShowForm(!showForm)} variant={showForm ? "outline" : "default"}>
             {showForm ? "Cancel" : "Add Seller"}
           </Button>
         </div>
 
         {showForm && (
-          <form onSubmit={handleSubmit} className="p-6 border rounded-lg bg-card shadow-sm space-y-4">
-            <h2 className="text-xl font-semibold">Add New Seller</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1.5">Business Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.businessName}
-                  onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1.5">Contact Name</label>
-                <input
-                  type="text"
-                  value={formData.contactName}
-                  onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1.5">Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1.5">Phone</label>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1.5">Address</label>
-                <textarea
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                  rows={3}
-                />
-              </div>
-              <div className="border-t pt-4">
-                <h4 className="text-sm font-semibold mb-3">Account Manager (Optional)</h4>
-                <div className="space-y-3">
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">Name</label>
-                    <input
-                      type="text"
+          <Card>
+            <CardHeader>
+              <CardTitle>Add New Seller</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="businessName">Business Name *</Label>
+                  <Input
+                    id="businessName"
+                    required
+                    value={formData.businessName}
+                    onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="contactName">Contact Name</Label>
+                  <Input
+                    id="contactName"
+                    value={formData.contactName}
+                    onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="address">Address</Label>
+                  <Textarea
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    rows={3}
+                  />
+                </div>
+                <div className="border-t pt-6 space-y-4">
+                  <h4 className="text-sm font-semibold">Account Manager <span className="text-muted-foreground font-normal">(Optional)</span></h4>
+                  <div className="space-y-2">
+                    <Label htmlFor="amName">Name</Label>
+                    <Input
+                      id="amName"
                       value={formData.accountManagerName}
                       onChange={(e) => setFormData({ ...formData, accountManagerName: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-md"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">Mobile Number</label>
-                    <input
-                      type="text"
+                  <div className="space-y-2">
+                    <Label htmlFor="amMobile">Mobile Number</Label>
+                    <Input
+                      id="amMobile"
                       value={formData.accountManagerMobile}
                       onChange={(e) => setFormData({ ...formData, accountManagerMobile: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-md"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1.5">Email Address</label>
-                    <input
+                  <div className="space-y-2">
+                    <Label htmlFor="amEmail">Email Address</Label>
+                    <Input
+                      id="amEmail"
                       type="email"
                       value={formData.accountManagerEmail}
                       onChange={(e) => setFormData({ ...formData, accountManagerEmail: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-md"
                     />
                   </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1.5">Service Note</label>
-                <textarea
-                  value={formData.serviceNote}
-                  onChange={(e) => setFormData({ ...formData, serviceNote: e.target.value })}
-                  className="w-full px-3 py-2 border rounded-md"
-                  rows={3}
-                />
-              </div>
-              <Button type="submit">Save Seller</Button>
-            </div>
-          </form>
+                <div className="space-y-2">
+                  <Label htmlFor="serviceNote">Service Note</Label>
+                  <Textarea
+                    id="serviceNote"
+                    value={formData.serviceNote}
+                    onChange={(e) => setFormData({ ...formData, serviceNote: e.target.value })}
+                    rows={3}
+                  />
+                </div>
+                <Button type="submit">Save Seller</Button>
+              </form>
+            </CardContent>
+          </Card>
         )}
 
-        <div className="border rounded-lg">
+        <Card>
           <Table>
             <TableHeader>
               <TableRow>
@@ -202,8 +205,8 @@ export default function SellersPage() {
               )}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       </div>
-    </div>
+    </AppLayout>
   );
 }

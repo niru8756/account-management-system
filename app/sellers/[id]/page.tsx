@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AppLayout } from "@/components/app-layout";
 
 type Seller = {
   id: string;
@@ -311,8 +312,8 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
   if (!seller) return <div className="p-8">Loading...</div>;
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <AppLayout>
+      <div className="space-y-6">
         <Button variant="ghost" onClick={() => router.push("/sellers")}>
           ← Back to Sellers
         </Button>
@@ -823,6 +824,6 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AppLayout>
   );
 }

@@ -17,6 +17,7 @@
   "ui_changes": [
     {
       "area": "Global Layout",
+      "status": "COMPLETE",
       "requirements": [
         "Introduce a consistent page layout with header, content area, and optional sidebar",
         "Apply consistent spacing and alignment across all pages",
@@ -44,6 +45,7 @@
     },
     {
       "area": "Document List UI",
+      "status": "COMPLETE",
       "requirements": [
         "Display documents in a structured table layout",
         "Columns must include file name, tag, and link",
@@ -53,6 +55,7 @@
     },
     {
       "area": "Forms",
+      "status": "COMPLETE",
       "requirements": [
         "Refactor all forms to use shadcn/ui Form, Input, Select, and Textarea components",
         "Ensure consistent label placement and validation messaging",
@@ -61,6 +64,7 @@
     },
     {
       "area": "Notes & Text Fields",
+      "status": "COMPLETE",
       "requirements": [
         "Use shadcn/ui Textarea for note fields",
         "Ensure adequate height and spacing for readability",
@@ -69,6 +73,7 @@
     },
     {
       "area": "Feedback & States",
+      "status": "COMPLETE",
       "requirements": [
         "Use shadcn/ui components for loading states, empty states, and error states",
         "Display clear empty-state messages when no data is present",
