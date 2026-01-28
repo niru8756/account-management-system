@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppLayout } from "@/components/app-layout";
 
@@ -202,7 +200,6 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
     if (res.ok) {
       setIsEditing(false);
       fetchSeller(id);
-      toast.success("Seller updated successfully");
     }
   };
 
@@ -212,7 +209,6 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
     });
     if (res.ok) {
       fetchInvoices(paymentId);
-      toast.success("Invoice generated successfully");
     }
   };
 
@@ -228,7 +224,6 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
       setFileUrl("");
       setTags("");
       fetchDocuments(id);
-      toast.success("Document uploaded successfully");
     }
   };
 
@@ -241,17 +236,13 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
     if (res.ok) {
       setEditingDocId(null);
       fetchDocuments(id);
-      toast.success("Document updated successfully");
     }
   };
 
   const handleDeleteDocument = async (docId: string) => {
     if (!confirm("Delete this document?")) return;
     const res = await fetch(`/api/documents/${docId}`, { method: "DELETE" });
-    if (res.ok) {
-      fetchDocuments(id);
-      toast.success("Document deleted successfully");
-    }
+    if (res.ok) fetchDocuments(id);
   };
 
   const handlePayment = async (e: React.FormEvent) => {
@@ -272,7 +263,6 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
       setReference("");
       setProofOfPayment("");
       fetchPayments(id);
-      toast.success("Payment recorded successfully");
     }
   };
 
@@ -287,7 +277,6 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
       setNoteContent("");
       setNoteAttachment("");
       fetchInternalNotes(id);
-      toast.success("Note added successfully");
     }
   };
 
@@ -303,7 +292,6 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
       setProposalFileUrl("");
       setProposalShareable(false);
       fetchProposals(id);
-      toast.success("Proposal uploaded successfully");
     }
   };
 
@@ -318,25 +306,10 @@ export default function SellerProfilePage({ params }: { params: Promise<{ id: st
       setMarketplace("");
       setStage("");
       fetchLifecycleHistory(id);
-      toast.success("Lifecycle updated successfully");
     }
   };
 
-  if (!seller) return (
-    <AppLayout>
-      <div className="space-y-6 p-8">
-        <Skeleton className="h-10 w-32" />
-        <Card>
-          <CardHeader><Skeleton className="h-6 w-48" /></CardHeader>
-          <CardContent className="space-y-4">
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-          </CardContent>
-        </Card>
-      </div>
-    </AppLayout>
-  );
+  if (!seller) return <div className="p-8">Loading...</div>;
 
   return (
     <AppLayout>

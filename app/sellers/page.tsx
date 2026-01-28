@@ -2,13 +2,24 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AppLayout } from "@/components/app-layout";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 type Seller = {
   id: string;
@@ -24,21 +35,39 @@ type Seller = {
   createdAt: string;
 };
 
+const sellerSchema = z.object({
+  businessName: z.string().min(1, "Business name is required"),
+  contactName: z.string().optional(),
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  accountManagerName: z.string().optional(),
+  accountManagerMobile: z.string().optional(),
+  accountManagerEmail: z.string().email("Invalid email").optional().or(z.literal("")),
+  serviceNote: z.string().optional(),
+});
+
+type SellerFormValues = z.infer<typeof sellerSchema>;
+
 export default function SellersPage() {
   const [sellers, setSellers] = useState<Seller[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    businessName: "",
-    contactName: "",
-    email: "",
-    phone: "",
-    address: "",
-    accountManagerName: "",
-    accountManagerMobile: "",
-    accountManagerEmail: "",
-    serviceNote: "",
-  });
   const router = useRouter();
+
+  const form = useForm<SellerFormValues>({
+    resolver: zodResolver(sellerSchema),
+    defaultValues: {
+      businessName: "",
+      contactName: "",
+      email: "",
+      phone: "",
+      address: "",
+      accountManagerName: "",
+      accountManagerMobile: "",
+      accountManagerEmail: "",
+      serviceNote: "",
+    },
+  });
 
   useEffect(() => {
     fetchSellers();
@@ -52,17 +81,17 @@ export default function SellersPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: SellerFormValues) => {
     const res = await fetch("/api/sellers", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(data),
     });
     if (res.ok) {
       setShowForm(false);
-      setFormData({ businessName: "", contactName: "", email: "", phone: "", address: "", accountManagerName: "", accountManagerMobile: "", accountManagerEmail: "", serviceNote: "" });
+      form.reset();
       fetchSellers();
+      toast.success("Seller created successfully");
     }
   };
 
@@ -82,90 +111,131 @@ export default function SellersPage() {
               <CardTitle>Add New Seller</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="businessName">Business Name *</Label>
-                  <Input
-                    id="businessName"
-                    required
-                    value={formData.businessName}
-                    onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="businessName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Business Name *</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="contactName">Contact Name</Label>
-                  <Input
-                    id="contactName"
-                    value={formData.contactName}
-                    onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+                  <FormField
+                    control={form.control}
+                    name="contactName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Contact Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input type="tel" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
-                  <Textarea
-                    id="address"
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    rows={3}
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address</FormLabel>
+                        <FormControl>
+                          <Textarea rows={3} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <div className="border-t pt-6 space-y-4">
-                  <h4 className="text-sm font-semibold">Account Manager <span className="text-muted-foreground font-normal">(Optional)</span></h4>
-                  <div className="space-y-2">
-                    <Label htmlFor="amName">Name</Label>
-                    <Input
-                      id="amName"
-                      value={formData.accountManagerName}
-                      onChange={(e) => setFormData({ ...formData, accountManagerName: e.target.value })}
+                  <div className="border-t pt-6 space-y-4">
+                    <h4 className="text-sm font-semibold">Account Manager <span className="text-muted-foreground font-normal">(Optional)</span></h4>
+                    <FormField
+                      control={form.control}
+                      name="accountManagerName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="accountManagerMobile"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mobile Number</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="accountManagerEmail"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email Address</FormLabel>
+                          <FormControl>
+                            <Input type="email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="amMobile">Mobile Number</Label>
-                    <Input
-                      id="amMobile"
-                      value={formData.accountManagerMobile}
-                      onChange={(e) => setFormData({ ...formData, accountManagerMobile: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="amEmail">Email Address</Label>
-                    <Input
-                      id="amEmail"
-                      type="email"
-                      value={formData.accountManagerEmail}
-                      onChange={(e) => setFormData({ ...formData, accountManagerEmail: e.target.value })}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="serviceNote">Service Note</Label>
-                  <Textarea
-                    id="serviceNote"
-                    value={formData.serviceNote}
-                    onChange={(e) => setFormData({ ...formData, serviceNote: e.target.value })}
-                    rows={3}
+                  <FormField
+                    control={form.control}
+                    name="serviceNote"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Service Note</FormLabel>
+                        <FormControl>
+                          <Textarea rows={3} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <Button type="submit">Save Seller</Button>
-              </form>
+                  <Button type="submit">Save Seller</Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         )}
