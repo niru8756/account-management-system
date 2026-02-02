@@ -438,7 +438,7 @@ export default function SellerProfilePage({
                 </div>
                 <div className="border-t pt-6 space-y-4">
                   <h4 className="text-sm font-semibold">
-                    Account Manager{" "}
+                    Point Of Contact{" "}
                     <span className="text-muted-foreground font-normal">
                       (Optional)
                     </span>
@@ -521,7 +521,7 @@ export default function SellerProfilePage({
                 </div>
                 <div className="border-t pt-6">
                   <h4 className="text-sm font-semibold mb-4">
-                    Account Manager
+                    Point Of Contact
                   </h4>
                   <div className="grid grid-cols-2 gap-6">
                     <div>
